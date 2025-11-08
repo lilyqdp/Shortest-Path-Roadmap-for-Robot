@@ -14,14 +14,14 @@ def findReflexiveVertices(polygons):
             x, y = poly[i]
             x_next, y_next = poly[(i + 1) % n]
     # vertices = [[x1,y1],[x2,y2],...]
-    v1x, v1y = x_next - x, y_next - y 
-    v2x, v2y = x_prev - x, y_next - y 
+        v1x, v1y = x_next - x, y_next - y 
+        v2x, v2y = x_prev - x, y_prev - y 
 
     # You should return a list of (x,y) values as lists, i.e.
-    cross = v1x*v2y-v1y*v2x
-    if cross > 0:
-        vertices.append([x,y])
-
+        cross = v1x*v2y-v1y*v2x
+    
+        if cross > 0:
+            vertices.append([x,y])
     return vertices
 
 '''
