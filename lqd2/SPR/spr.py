@@ -1,8 +1,13 @@
 import sys
-
+import numpy as np
+import math
+from collections import defaultdict
 '''
 Report reflexive vertices
 '''
+
+
+
 def findReflexiveVertices(polygons):
     vertices=[]
     
@@ -14,14 +19,14 @@ def findReflexiveVertices(polygons):
             x, y = poly[i]
             x_next, y_next = poly[(i + 1) % n]
     # vertices = [[x1,y1],[x2,y2],...]
-        v1x, v1y = x_next - x, y_next - y 
-        v2x, v2y = x_prev - x, y_prev - y 
+            v1x, v1y = x_next - x, y_next - y 
+            v2x, v2y = x_prev - x, y_prev - y 
 
     # You should return a list of (x,y) values as lists, i.e.
-        cross = v1x*v2y-v1y*v2x
+            cross = v1x*v2y-v1y*v2x
     
-        if cross > 0:
-            vertices.append([x,y])
+            if cross > 0:
+                vertices.append([x,y])
     return vertices
 
 '''
@@ -29,13 +34,36 @@ Compute the roadmap graph
 '''
 def computeSPRoadmap(polygons, reflexVertices):
     vertexMap = dict()
-    adjacencyListMap = dict()
+    adjacencyListMap = defaultdict(list)
     
     # Your code goes here
     # You should check for each pair of vertices whether the
     # edge between them should belong to the shortest path
     # roadmap. 
-    #
+    for index in range(len(reflexVertices)):
+        vertexMap[index+1]= reflexVertices[index]
+
+    def can_see_eachother(p1, p2):
+        for poly in polygons:
+            n = len(poly)
+            for i in range(n):
+                edge_start = poly[i]
+                edge_end = poly[(i+1)%n]
+
+                if p1 in (edge_start, edge_end) or p2 in (edge_start, edge_end):
+                    continue
+                if lines_intersect(p1, p2, edge_start, edge_end):
+                    return False
+        return True
+    
+    def lines_intersect(A,B,C,D):
+        def ccw(X,Y,Z): #counter-clock-wise
+            return (Z[1] - X[1]) * (Y[0] - X[0]) > (Y[1] - X[1]) * (Z[0] - X[0])
+        return ccw(A,B,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
+    
+    def dist(p1,p2):
+        return math.hypot(p1[0]- p2[0], p1[1]- p2[1])
+
     # Your vertexMap should look like
     # {1: [5.2,6.7], 2: [9.2,2.3], ... }
     #
@@ -44,6 +72,16 @@ def computeSPRoadmap(polygons, reflexVertices):
     #
     # The vertex labels used here should start from 1
     
+    for i in range(1, len(vertexMap)+1):
+        for j in range(1, len(vertexMap)+1):
+            if i ==j:
+                continue
+            point_a = vertexMap[i]
+            point_b = vertexMap[j]
+
+            if can_see_eachother(point_a, point_b):
+                distance = dist(point_a, point_b)
+                adjacencyListMap[i].append([j, distance])
     return vertexMap, adjacencyListMap
 
 '''
