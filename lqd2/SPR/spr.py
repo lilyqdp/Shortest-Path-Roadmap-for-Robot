@@ -23,7 +23,9 @@ def findReflexiveVertices(polygons):
             ay = prev[1] - curr[1]
             bx = nex[0] - curr[0]
             by = nex[1] - curr[1]
-
+            
+            cross = ax * by - ay * bx
+        
     # You should return a list of (x,y) values as lists, i.e.
             if cross < 0:
                 vertices.append(curr)
@@ -172,6 +174,12 @@ def updateRoadmap(polygons, vertexMap, adjListMap, x1, y1, x2, y2):
             d = dist(goalPt, point)
             updatedALMap[goalLabel].append([label, d])
             updatedALMap[label].append([goalLabel, d])
+        # Connect start directly to goal if visible
+        if can_see(startPt, goalPt):
+            d = dist(startPt, goalPt)
+            updatedALMap[startLabel].append([goalLabel, d])
+            updatedALMap[goalLabel].append([startLabel, d])
+
 
     return startLabel, goalLabel, updatedALMap
 
