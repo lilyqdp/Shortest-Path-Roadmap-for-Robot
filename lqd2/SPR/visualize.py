@@ -81,6 +81,41 @@ def drawRoadmap(ax, vertexMap, adjListMap):
                 x2, y2 = vertexMap[nbr][0] / 10.0, vertexMap[nbr][1] / 10.0
                 ax.plot([x1, x2], [y1, y2], color='green', linewidth=1)
 
+def drawFinalPath(ax, path, vertexMap, startPt, goalPt):
+    points = []
+    for node in path:
+        if node == 0: 
+            points.append(startPt)
+        elif node == -1: 
+            points.append(goalPt)
+        else:
+            points.append(vertexMap[node])
+
+    xs = [p[0] / 10.0 for p in points]
+    ys = [p[1] / 10.0 for p in points]
+
+    ax.plot(xs, ys, color='red', linewidth=2)
+    
+def visualizeAll(polygons, vertexMap, adjListMap, path, startPt, goalPt):
+    fig, ax = setupPlot()
+
+    # Draw obstacles
+    for poly in polygons:
+        patch = createPolygonPatch(poly)
+        ax.add_patch(patch)
+
+    # Draw roadmap (green)
+    drawRoadmap(ax, vertexMap, adjListMap)
+
+    # Draw shortest path (red)
+    drawFinalPath(ax, path, vertexMap, startPt, goalPt)
+
+    # Draw start + goal
+    ax.scatter(startPt[0]/10.0, startPt[1]/10.0, color='blue', s=40)
+    ax.scatter(goalPt[0]/10.0, goalPt[1]/10.0, color='orange', s=40)
+
+    plt.show()
+
 
 if __name__ == "__main__":
     
