@@ -15,18 +15,18 @@ def findReflexiveVertices(polygons):
     for poly in polygons:
         n = len(poly)
         for i in range(n):
-            x_prev, y_prev = poly[(i-1)%n]
-            x, y = poly[i]
-            x_next, y_next = poly[(i + 1) % n]
+            prev = poly[i - 1]
+            curr = poly[i]
+            nex = poly[(i + 1) % n]
     # vertices = [[x1,y1],[x2,y2],...]
-            v1x, v1y = x_next - x, y_next - y 
-            v2x, v2y = x_prev - x, y_prev - y 
+            ax = prev[0] - curr[0]
+            ay = prev[1] - curr[1]
+            bx = nex[0] - curr[0]
+            by = nex[1] - curr[1]
 
     # You should return a list of (x,y) values as lists, i.e.
-            cross = v1x*v2y-v1y*v2x
-    
-            if cross > 0:
-                vertices.append([x,y])
+            if cross < 0:
+                vertices.append(curr)
     return vertices
 
 '''
@@ -93,29 +93,86 @@ def uniformCostSearch(adjListMap, start, goal):
     
     # Your code goes here. As the result, the function should
     # return a list of vertex labels, e.g.
-    #
+    distance_from_start = {start: 0.0}
+    previous = {start: None}
+    queue = [start]
     # path = [23, 15, 9, ..., 37]
     #
+    while queue:
+        current = min(queue, key=lambda n: distance_from_start[n])
+        queue.remove(current)
+
+        if current == goal:
+            pathLength = distance_from_start[goal]
+            node = goal
+            while node is not None:
+                path.insert(0, node)
+                node = previous[node]
+            return path, pathLength
     # in which 23 would be the label for the start and 37 the
     # label for the goal.
-    
-    return path, pathLength
+        for neighbor, edge_cost in adjListMap.get(current, []):
+            new_distance = distance_from_start[current] + edge_cost
+            if (neighbor not in distance_from_start) or (new_distance < distance_from_start[neighbor]):
+                distance_from_start[neighbor] = new_distance
+                previous[neighbor] = current
+                if neighbor not in queue:
+                    queue.append(neighbor)
 
+    return path, pathLength
 '''
 Agument roadmap to include start and goal
 '''
 def updateRoadmap(polygons, vertexMap, adjListMap, x1, y1, x2, y2):
-    updatedALMap = dict()
+    updatedALMap = defaultdict(list)
     startLabel = 0
     goalLabel = -1
 
     # Your code goes here. Note that for convenience, we 
     # let start and goal have vertex labels 0 and -1,
+    for k in adjListMap:
+        updatedALMap[k] = list(adjListMap[k])
+
+    startPt = [x1, y1]
+    goalPt = [x2, y2]
     # respectively. Make sure you use these as your labels
     # for the start and goal vertices in the shortest path
+    def lines_intersect(A, B, C, D):
+        def ccw(X, Y, Z):
+            return (Z[1]-X[1]) * (Y[0]-X[0]) > (Y[1]-X[1]) * (Z[0]-X[0])
+        return ccw(A, C, D) != ccw(B, C, D) and ccw(A, B, C) != ccw(A, B, D)
+
+    def can_see(p1, p2):
+        for poly in polygons:
+            n = len(poly)
+            for i in range(n):
+                a = poly[i]
+                b = poly[(i+1) % n]
+
+                if p1 in (a,b) or p2 in (a,b):
+                    continue
+
+                if lines_intersect(p1, p2, a, b):
+                    return False
+        return True
+    def dist(a, b):
+        return math.hypot(a[0] - b[0], a[1] - b[1])
     # roadmap. Note that what you do here is similar to
     # when you construct the roadmap. 
-    
+    for label, point in vertexMap.items():
+
+        # Connect start
+        if can_see(startPt, point):
+            d = dist(startPt, point)
+            updatedALMap[startLabel].append([label, d])
+            updatedALMap[label].append([startLabel, d])
+
+        # Connect goal
+        if can_see(goalPt, point):
+            d = dist(goalPt, point)
+            updatedALMap[goalLabel].append([label, d])
+            updatedALMap[label].append([goalLabel, d])
+
     return startLabel, goalLabel, updatedALMap
 
 if __name__ == "__main__":
