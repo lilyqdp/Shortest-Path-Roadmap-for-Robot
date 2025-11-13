@@ -183,14 +183,6 @@ def updateRoadmap(polygons, vertexMap, adjListMap, x1, y1, x2, y2):
 
     return startLabel, goalLabel, updatedALMap
 
-from visualize import visualizeAll
-
-startPt = [x1, y1]
-goalPt = [x2, y2]
-
-visualizeAll(polygons, vertexMap, updatedALMap, path, startPt, goalPt)
-
-
 if __name__ == "__main__":
     
     # Retrive file name for input data
@@ -249,3 +241,10 @@ if __name__ == "__main__":
     
 
     # Extra visualization elements goes here
+    from visualize import visualizeAll
+
+    startPt = [x1, y1]
+    goalPt = [x2, y2]
+
+    visualizeAll(polygons, vertexMap, updatedALMap, path, startPt, goalPt)
+
