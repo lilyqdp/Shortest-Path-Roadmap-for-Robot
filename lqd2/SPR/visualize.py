@@ -73,6 +73,15 @@ def drawPolygons(polygons):
         ax.add_patch(patch)    
     plt.show()
 
+def drawRoadmap(ax, vertexMap, adjListMap):
+    for v, edges in adjListMap.items():
+        for nbr, _ in edges:
+            if v in vertexMap and nbr in vertexMap:
+                x1, y1 = vertexMap[v][0] / 10.0, vertexMap[v][1] / 10.0
+                x2, y2 = vertexMap[nbr][0] / 10.0, vertexMap[nbr][1] / 10.0
+                ax.plot([x1, x2], [y1, y2], color='green', linewidth=1)
+
+
 if __name__ == "__main__":
     
     # Retrive file name for input data
