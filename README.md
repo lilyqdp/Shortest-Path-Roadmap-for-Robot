@@ -15,11 +15,7 @@ Implements geometric orientation checks
 
 Outputs a clean list of vertex coordinates
 ✔ Demonstrates understanding of computational geometry and polygon structures
-(Assignment reference: reflex vertex detection requirement 
 
-mp-02-2 (2)
-
-)
 
 2. Roadmap Construction
 
@@ -28,16 +24,10 @@ Connects all mutually visible reflex vertices
 Performs line-of-sight collision checks against all obstacles
 
 Builds:
-
 vertexMap: {vertex_id: (x, y)}
 
 adjListMap: {vertex_id: [[neighbor_id, dist], ...]}
 ✔ Shows experience with graph building, geometric algorithms, and distance computation
-(Assignment reference: building adjacency lists with edge lengths 
-
-mp-02-2 (2)
-
-)
 
 3. Uniform-Cost Search (UCS)
 
@@ -47,11 +37,6 @@ Computes the true shortest weighted path
 
 Returns both the vertex path and cumulative cost
 ✔ Demonstrates mastery of classical search algorithms and priority-queue logic
-(Assignment reference: required UCS implementation 
-
-mp-02-2 (2)
-
-)
 
 4. Start/Goal Integration
 
@@ -61,11 +46,6 @@ Computes new visible edges and updates adjacency lists
 
 Calls UCS to compute final path
 ✔ Reflects knowledge of dynamic graph expansion and real-world navigation pipelines
-(Assignment reference: adding start/goal to roadmap 
-
-mp-02-2 (2)
-
-)
 
 5. Optional Visualization (Bonus)
 
@@ -79,11 +59,6 @@ Computed shortest path (red)
 
 Uses Matplotlib for 2D rendering
 ✔ Demonstrates data visualization and debugging skills
-(Assignment reference: visualization bonus 
-
-mp-02-2 (2)
-
-)
 
 📁 Project Structure
 your_netid/
